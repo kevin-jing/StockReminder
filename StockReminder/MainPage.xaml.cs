@@ -55,17 +55,15 @@ namespace StockReminder
 
         public void OnMessageReceived(string name, string message)
         {
-            Task.Run(() => OnMessageReceivedAsync(name, message));
-        }
+            Task.Run(async () =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    Messages.Add($"{name}: {message}");
+                });
 
-        public async Task OnMessageReceivedAsync(string name, string message)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-             {
-                 Messages.Add($"{name}: {message}");
-             });
-
-            //_messagingService.ShowMessage($"{name}: {message}");
+                //_messagingService.ShowMessage($"{name}: {message}");
+            });
         }
 
         private void HubConnectionClosed()
